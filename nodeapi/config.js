@@ -55,3 +55,9 @@ exports.settings = settings = {
         'pool': 5
     }
 };
+
+exports.get_app_name = get_app_name = function get_app_name(p, cb) {
+	console.log('Check app name - test7');
+	cb(null, {'app_name':'test7'} );
+}
+
