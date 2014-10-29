@@ -1,0 +1,982 @@
+<!--
+copyright (c) 2014 DRI
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>Node-1-Local</title>
+    <meta charset="utf-8">
+    <meta name="description" content="getWid">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+    <!-- Local copies of jquery -->
+    <!-- <script src="./jquery.min.js"></script> -->
+
+    <!-- Remote jquery -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
+    <!-- Local copies of bootstrap -->
+    <!-- <link rel="stylesheet" href="./bootstrap/css/bootstrap.min.css"> -->
+    <!-- <link rel="stylesheet" href="./bootstrap/css/bootstrap-theme.min.css"> -->
+    <!-- <script src="./bootstrap/js/bootstrap.min.js"></script> -->
+
+    <!-- Remote bootstrap -->
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+
+    <script src="js/async.js"></script>
+    <script src="js/config-local.js"></script>
+    <script src="js/et-interface.js"></script>
+    <script src="js/et-utils.js"></script>
+    <!--<script src="et-sec.js"></script>-->
+    <script src="js/et-security.js"></script>
+    <script src="js/executethis.js"></script>
+    <script src="js/et-query.js"></script>
+    <script src="js/et-test.js"></script>
+    <!-- <script src="et-testing.js" type="text/javascript"></script> -->
+
+    <script src="js/et-get.js"></script>
+    <script src="js/et-add.js"></script>
+
+    <script src="js/et-utils-test.js"></script>
+
+    <script src="js/test-addhoc.js"></script>
+    <script src="js/test-execute.js"></script>
+    <script src="js/test-query.js"></script>
+    <script src="js/test-dto.js"></script>
+    <script src="js/test-inherit.js"></script>
+    <script src="js/test-namespace.js"></script>
+    <script src="js/test-security.js"></script>
+    <script src="js/test-functions.js"></script>
+    <script src="js/ngWidApp.js"></script>
+    <script src="js/et-htmlprocessor.js"></script>
+
+    <!-- <script src="et-testing.js" type="text/javascript"></script> -->
+    <style type="text/css">
+        body {
+            padding-top: 15px;
+            padding-bottom: 20px;
+            background-color: #fce7bd;
+        }
+/*
+        #storageSpaceBar {
+            background-color: #000000;
+            color:#FFFFFF;
+        }
+*/
+        #storageSpaceValue {
+            padding: 3px;
+            margin-bottom: 5px;
+            background-color: #7BA1E2;
+            width: 0%;
+        }
+    </style>
+    <script type="text/javascript">
+        // This example fires without a callback
+        $(document).ready(function() {
+
+            // $("button.collapsibleallbtn").click(function(){
+            // // $("[type=button][value='Collapse All']").click(function(){
+            //      $("button[collapsible='collapsiblebtn']").reset();
+            //  });
+
+            $("[type=button]").button();
+            $("[type=button]").click(function() {
+                $(this).button('toggle');
+                if ($(this).text()==="+"){
+                    $(this).button('open');
+                    $(this).button().text("-");
+                }
+                else {
+                    $(this).button('reset');
+                    $(this).button().text("+");
+                }
+            });
+        });
+
+
+        function test4(params) {
+            alert("test4 fired with these params:\n" + JSON.stringify(params));
+            return params;
+        }
+        // storage is the total possible in local storage
+        //http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"
+        // A formula for this is var storage = 1024 * 1024 * 5 - unescape(encodeURIComponent(JSON.stringify(localStorage))).length;
+        var storage = 5229349;
+        // localStorage.setItem("totalStorage", storage);
+        var storageSpace = storage; //localStorage.getItem("totalStorage");
+        var currentStorageSpace = 1024 * 1024 * 5 - unescape(encodeURIComponent(JSON.stringify(localStorage))).length;
+        var percentageLeft = Math.round((currentStorageSpace / storageSpace) * 100);
+
+        function updateMemory() {
+            $('#storageSpaceValue').css('width', percentageLeft + "%");
+            $('#storageSpaceText').text("Remaining Storage: " + percentageLeft + "%  --  Actual bytes used: " + (storageSpace - currentStorageSpace));
+        }
+    </script>
+
+</head>
+
+<body>
+<!--
+<div id='storageSpaceBar'>
+<div id='storageSpaceValue'>
+  <div id='storageSpaceText'></div>
+</div>
+</div>
+-->
+
+<div class='container'>
+    <div class='row'>
+        <div class='col-md-12'>
+            <input id='execute_test' class='btn btn-primary' type='button' value='Run Test' />
+            <input id='execute_function' class='btn btn-primary' type='button' value='Run Function' />
+            <input id='execute_server_test' class='btn btn-primary' type='button' value='Run Server Test' />
+            <input id='execute_server_function' class='btn btn-primary' type='button' value='Run Server Function' />
+            <input id='et-test' class='btn btn-primary' type='button' value='et' />
+            <input id='get_copy' class='btn btn-info' type='button' value='Copy for get wid' />
+            <input id='add_copy' class='btn btn-info' type='button' value='Copy for add wid' />
+            <input id='output_to_input' class='btn btn-warning' type='button' value='Output to Input' />
+
+            <br>
+            <br>
+            <label>Function:</label>
+            <input id='function_to_run' size='20' value=''>
+            <input id='reload_page' class='btn btn-danger' type='button' value='Reload Page' />
+            <label>Clean local storage?</label>
+            <input type='checkbox' id='localStorageClean' checked="true">&nbsp&nbsp
+            <input id='domain_switch' class='btn btn-primary' type='button' value='Server View' />
+            <!--
+        <label>Server call ? </label><input type='checkbox' id='server_caller'>
+-->
+            <label id='test_result_message' style='padding-left: 3em;'>--------</label>
+            <!-- <input id='mybutton' class='btn btn-warning' type='button' value='Show/Hide Local Storage'/>  -->
+        </div>
+        <!-- end of col-md-12> -->
+    </div>
+    <!-- end of row -->
+    <br>
+    <div>
+
+        <div class='row'>
+            <div class="col-md-12">
+                <span class="label label-default well_hider">Debug</span>
+                <div class="well" style='display: none;'>
+<!--
+                    <label>Debug?</label>
+                    <input type='checkbox' id='debugon'> 
+                -->
+                    <label>Destination: Print?</label>
+                    <input type='checkbox' id='dest_print' checked>
+                    <label>Google?</label>
+                    <input type='checkbox' id='dest_google'>
+                    <label>Debug Level?</label>
+                    <input id='dbug_level' size='3' value=''>
+                    <br>
+                    <label>Name:</label>
+                    <input id='dbug_name' size='20' value=''>
+                    <label>Category:</label>
+                    <input id='dbug_category' size='20' value=''>
+                    <label>Subcategory:</label>
+                    <input id='dbug_subcategory' size='20' value=''>
+                    <label>Filter:</label>
+                    <input id='dbug_filter' size='20' value=''>
+                    <!-- <textarea id="function_parameters" class='test_content col-md-12 col-sm-12' rows='3'></textarea> -->
+
+                </div>
+            </div>
+            <!-- end of col-md-12 -->
+        </div>
+        <!-- end row -->
+        <br>
+        <div class='row'>
+            <div class="col-md-12">
+                <span class="label label-default well_hider">Function Parameters :</span>
+                <div class="well" style='display: none;'>
+                    <textarea id="function_parameters" class='test_content col-md-12 col-sm-12' rows='3'></textarea>
+                </div>
+            </div>
+            <!-- end of col-md-12 -->
+        </div>
+        <!-- end row -->
+    </div>
+    <br>
+    <input class='btn btn-mini btn-info' type="button" value="Execute This" onclick="javascript:testexecutethis()" />
+
+    <input class='btn btn-mini btn-info' type="button" value="ConvertToDOT" onclick="javascript:testconverttodot()" style='float:right;' />
+    <input class='btn btn-mini btn-info' type="button" value="ConvertFromDOT" onclick="javascript:testconvertfromdot()" style='float:right;' />
+    <br>
+    <br>
+
+    <div class='row'>
+        <div class='col-md-1 col-lg-1'>
+            <input id='radio_short' type='radio' Name='output_type' value='short'>&nbspMin
+            <br>
+            <input id='radio_long' type='radio' Name='output_type' value='long' checked='true'>&nbspMax
+        </div>
+        <div class="col-md-11 col-lg-11">
+            <span class="label label-default well_hider">Function Output</span>
+            <div class="well" style='display: block;'>
+                    <pre id="Function_Output">
+                        <div id='short_output'>--------</div>
+                        <div id='long_output' style='display:none'>--------</div>
+
+                    </pre>
+            </div>
+        </div>
+        <!-- end of col-md-12 -->
+
+    </div>
+    <!-- end row -->
+    <br>
+
+    <div class='row'>
+        <div class='col-md-1 col-lg-1'>
+<!--             <input id='data_local_storage' type='radio' Name='data_type' value='storage'>&nbspLocal
+            <br> -->
+            <input id='data_store' type='radio' Name='data_type' value='store'>&nbspStore
+            <br>
+            <input id='data_wid' type='radio' Name='data_type' value='wid'>&nbspWid
+        </div>
+        <div class="col-md-11 col-lg-11">
+            <span class="label label-default well_hider">Data</span>
+            <div class="well" style='display: block;'>
+                <pre id="local_data">---------</pre>
+            </div>
+        </div>
+        <!-- end of col-md-9 -->
+    </div>
+    <!-- end row -->
+    <br>
+
+    <div class='row'>
+        <div class="col-md-12">
+            <span class="label label-default well_hider">DivPrint Output</span>
+            <div class="well">
+                <pre id="divprint">---------</pre>
+            </div>
+        </div>
+        <!-- end of col-md-12 -->
+    </div>
+
+    <button class="btn collapsibleallbtn">Collapse All</button>
+
+
+
+</div>
+<!-- end container -->
+<script>
+// This is for the funcitonality of the testing screen itself
+$('.well_hider').click(function() {
+    var test = $(this).next('.well');
+    if ($(test).css('display') != 'none') {
+        $(test).hide('slow');
+    } else {
+        // displayAllWids();
+        $(test).show('slow');
+    }
+});
+
+// This will run activate all the passing tests to insure they still work
+//[{"executethis":"query","query": {"$or": [{"wid":"joetestwid" }]}}]
+$('#runAllTests').click(function() {
+    RerunPassingTests();
+});
+
+// $('#debugon').change(function() {
+//     //alert('The checkbox changed');
+//     if ($('#debugon').is(':checked')) {
+//         //alert('true');
+//         Debug = 'true';
+//     } else {
+//         //alert('false');
+//         Debug = 'false';
+//     }
+// })
+
+// $("#dbug_level").change(function () {
+//     $("#debugon").prop('checked', true);
+// });
+
+$("#domain_switch").click(function() {
+    var here = document.URL;
+    var path = "";
+    if (here.substring(0,4) === "http") {
+        alert ('You are already viewing the server version.');
+    } else {
+        path = "http://dripoint.com/" + here.substring(here.indexOf('Staff'));
+        window.location.replace(path);
+    }
+})
+
+//This defines how data is stored and retrieved with local storage.
+//
+$(document).ready(function() {
+    // page loaded, on ready  >>     function etappstarted()
+
+    //Debug = 'false';
+    //bootprocess();
+
+    $('#function_to_run').val(sessionStorage.getItem("function"));
+    $('#function_to_run').focus();
+
+    //eventdeviceready({}, function (err, res) {
+    clearLocalStorage ({}, function (err, res) {
+        $('dest_print').prop("checked", true);
+        //alert(document.URL);
+
+    });
+
+});
+
+function default_js_callback(result_object, error_object)
+{
+    proxyprinttodiv('JS Function Complete: result_object -> ', result_object, 99);
+    proxyprinttodiv('JS Function Complete: error_object -> ', error_object, 99);
+}
+
+function execute_js_function()
+{
+    var function_to_execute = $('#function_to_run').val();
+    window[function_to_execute]({}, function (err, res)
+    {
+        show_function_output3(err, res)
+    });
+
+    // call a pure javascript function
+    // var fn_name = '';
+    // var fn_paramters = '';
+    // fn_name = $('#function_to_run').val().toString();
+    // if (fn_name.indexOf('(') > 0 && fn_name.indexOf(')') > 0 && fn_name.indexOf(')') > fn_name.indexOf('('))
+    // {
+    //     // Assume this is already a function and try to run it
+    // } else {
+    //     // Assume this is just a function name and try to add parameters from the parameters box
+    //     fn_paramters = $('#function_parameters').val();
+    // }
+    // if (window.hasOwnProperty(fn_name))
+    // {
+    //     if (fn_paramters > ' ')
+    //     {
+    //         window[fn_name](fn_paramters, default_js_callback);
+    //     } else {
+    //         window[fn_name]({}, default_js_callback);
+    //     }
+    // }
+}
+
+function execute_stuff(isTest, isServer, servername) {
+    // Save function from textbox
+    sessionStorage.setItem('function', $('#function_to_run').val());
+
+    // at the beginning of each >>     function etappnewpage() {
+    //etappinstall();
+    if ($("#localStorageClean").is(':checked')) {
+        // and the clearlocalstoraget ...check box >>  function etappinstall()
+        //eventdeviceready();
+        clearLocalStorage();
+        //eventclearlocalstorage();
+    }
+
+    eventnewpage({}, function (err, res) {
+
+        saveglobal("debugname", $('#dbug_name').val());
+        saveglobal("debugcat", $('#dbug_category').val());
+        saveglobal("debugsubcat", $('#dbug_subcategory').val());
+        // debugfilter = $('#dbug_filter').val();
+        saveglobal("debugfilter", $('#dbug_filter').val());
+        if ($('#dbug_level').val() != "") debuglevel = parseInt($('#dbug_level').val());
+
+        if ($('#dest_print').is(':checked') && !$('#dest_google').is(':checked')) saveglobal("debugdestination", 1);
+        if (!$('#dest_print').is(':checked') && $('#dest_google').is(':checked')) saveglobal("debugdestination", 2);
+        if ($('#dest_print').is(':checked') && $('#dest_google').is(':checked')) saveglobal("debugdestination", 3);
+
+
+        // localStorage.clear();
+        $('#resultDiv').text("");
+        $('#test_result_message').text("");
+        $('#divprint').text("");
+
+        var function_to_execute = $('#function_to_run').val();
+
+        // check to make sure the test string is in the right format
+        // if(function_to_execute.indexOf("ettest") === -1) {
+        //  function_to_execute = "ettest" + function_to_execute;
+        // }
+
+        var my_execute_object = {
+            "executethis": function_to_execute,
+            "command": {
+                "executetype": "series",
+                "processparameterfn":"execute_nothing",
+//                "processfn":"execute_function",
+                "environment": {
+                    "run": {
+                        "executelevel": -1
+                    }
+                }
+            }
+        };
+        var data = $('#function_parameters').val();
+        if (data != "") {
+            data = JSON.parse(data);
+            if (Object.keys(data).length > 0) {
+                alert('adding: ' + data);
+                for (var d in data) {
+                    my_execute_object[d] = data[d];
+                }
+            }
+        }
+
+        if (isServer) {
+        	my_execute_object.command.environment.syncrule = "sync_server";
+//            my_execute_object.command.processparameterfn='sync_server';
+        }
+        else 
+        {
+            my_execute_object.command.environment.syncrule = "sync_local";
+        }
+        // if ($('#server_caller').prop('checked')) {
+        // if (isServer) {
+        //     my_execute_object['configuration'] = {
+        //         "midexecute": [{
+        //             "dothis": "server",
+        //             "tryorder": 0,
+        //             "executeorder": 0,
+        //             "params": {}
+        //         }]
+        //     };
+        //     my_execute_object['command.debug'] = 'true';
+        //     if(servername){
+        //         my_execute_object['command']={'server':servername};
+        //     }
+        // }
+        // Change the Clean local storage checkbox to 'unchecked'
+        $("#localStorageClean").prop('checked', false);
+        // ******** This actually executes the function and show the output ********
+        // alert('ex-object:\n' + JSON.stringify(my_execute_object,'-', 4));
+        execute(my_execute_object, show_function_output3);
+    });
+}
+
+$('#execute_test').click(function() {
+    execute_stuff(true, false);
+});
+
+$('#et-test').click(function() {
+    $('#function_to_run').val("ettest" + $('#function_to_run').val());
+    execute_stuff(true, false);
+});
+
+$('#execute_function').click(function() {
+    //execute_stuff(false, false);
+    execute_js_function();
+});
+
+$('#execute_server_test').click(function() {
+    execute_stuff(true, true);
+});
+
+$('#execute_server_function').click(function() {
+    execute_stuff(false, true,"server2");
+});
+
+$('#get_copy').click(function() {
+    var temp = $('#function_to_run').val();
+    $('#function_parameters').text('{"getwidmaster":"' + temp + '"}');
+});
+
+$('#add_copy').click(function() {
+    var temp = $('#function_to_run').val();
+    $('#function_parameters').text('{"addwidmaster":"' + temp + '"}');
+});
+
+$('#output_to_input').click(function() {
+    var temp = $('#Function_Output').text();
+    $('#function_parameters').val(temp);
+});
+
+function return_long(result_array) {
+    // You don't know the outcome of the test yet.
+    if (result_array.length == 0) {
+        showPassFail("UNKNOWN");
+        return "\"no\":\"data\",";
+    }
+
+    var ultimate_pass_fail = "UNKNOWN";
+    var did_fail_flag = false;
+    var did_pass_flag = false;
+    var tmp_html_long = "";
+    var tmp_output_long = "";
+
+    for (var x in result_array) {
+        var jsonPretty = JSON.stringify(result_array[x], "-", 4);
+        tmp_html_long = jsonPretty;
+        tmp_output_long += "<pre>" + tmp_html_long + "</pre>";
+        // If a 'pass' is found, a pass 'could' happen.
+        if (tmp_html_long && tmp_html_long.indexOf("PASS") !== -1) did_pass_flag = true;
+        // If a 'fail' is found, a fail 'could' happen.
+        if (tmp_html_long && tmp_html_long.indexOf("FAIL") !== -1) did_fail_flag = true;
+
+        // tmp_html_long is invalid
+        if (!tmp_html_long) did_fail_flag = true;
+    }
+    // If there is a pass with no fail, the data passes.
+    if (did_pass_flag && !did_fail_flag) ultimate_pass_fail = "PASS";
+    // If there are any fails at all, the data fails.
+    if (did_fail_flag) ultimate_pass_fail = "FAIL";
+
+    showPassFail(ultimate_pass_fail);
+    return tmp_output_long;
+}
+
+function return_short(result_array) {
+    if (result_array.length == 0) return "\"no\":\"data\",";
+
+    var output_short = "";
+    var name = "";
+    var status = "";
+    var res1 = {}; // result from individual tests
+    var res2 = {}; // result from tt type tests
+    var res3 = {}; // result from second config test
+    res1 = result_array[0];
+    if (result_array && result_array[0] && result_array[0][0] instanceof Object) {
+        res2 = result_array[0][0];
+        console.log("res2: " + JSON.stringify(res2, '-', 4));
+    } else {
+        res2 = {
+            "no": "data"
+        };
+    }
+
+    if (result_array && result_array[0] && result_array[0][1] instanceof Object) {
+        res3 = result_array[0][1];
+        console.log("res3: " + JSON.stringify(res3, '-', 4));
+    } else {
+        res3 = {
+            "no": "data"
+        };
+    }
+    if (result_array.length == 1) {
+        if (res2 instanceof Array) {
+            // was code not needed here
+        } else {
+            if (res2.hasOwnProperty('test_name')) {
+                name = res2["test_name"];
+                status = res2[name];
+                output_short += "\"" + name + "\":\"" + status + "\",";
+                if (res3.hasOwnProperty('test_name')) {
+                    name = res3["test_name"];
+                    status = res3[name];
+                    output_short += "\"" + name + "\":\"" + status + "\",";
+                }
+            } else if (res1 && res1.hasOwnProperty('test_name')) {
+                name = res1["test_name"];
+                status = res1[name];
+                output_short += "\"" + name + "\":\"" + status + "\",";
+            }
+        }
+    } else {
+        for (var x in result_array) {
+            if (result_array[x] instanceof Array) {
+                output_short += return_short(result_array[x]);
+            } else {
+                var tmp_array = [];
+                tmp_array.push(result_array[x]);
+                output_short += return_short(tmp_array);
+            }
+        }
+    }
+    return output_short;
+}
+
+function get_indexes_of(needle, haystack) {
+    var indexes = [];
+    var n_length = needle.length;
+    var h_length = haystack.length;
+    for (var i = 0; i < (h_length - n_length); i++) {
+        if (haystack.substring(i, n_length) == needle) {
+            indexes.push(i);
+        }
+    }
+    return indexes;
+}
+
+function show_function_output3(err, result_array) {
+    // console.log("+++\n" + JSON.stringify(result_array, "-", 4));
+    // console.log("err object\n" + JSON.stringify(err, "-", 4));
+    // if (typeof(result_array) != "array" && typeof(result_array) == "object") {
+    //     result_array[0] = result_array;
+    // }
+    if (!isArray(result_array))
+    {
+        var temp=[]
+        temp.push(result_array)
+        result_array=temp
+    }
+    if (err && (Object.keys(err).length > 0)) {
+        result_array.push(err)
+    }
+    proxyprinttodiv("result_array", result_array, 99);
+
+    var server_output = [];
+    var currentresult;
+    var eachresult;
+
+    // we will get an array
+    // array will look like this [[], [], []]
+    for (eachresult in result_array) {
+        currentresult = result_array[eachresult]
+        if (currentresult && currentresult.command && currentresult.command.angularexecute && currentresult.command.angularexecute.parameters && currentresult.command.angularexecute.parameters.json) {
+            server_output.push(currentresult.command.angularexecute.parameters.json);
+            delete result_array[eachresult]
+
+        }
+    }
+
+
+    $('#Function_Output').empty();
+    var index = 0;
+    var target = "";
+    var tmp_html_short = "";
+    var output_short = "<div id='short_output' style='display:none'>{";
+    var output_long = "<div id='long_output' style='display:block'>";
+
+
+    output_long += return_long(result_array);
+    output_short += return_short(result_array);
+
+    output_short = output_short.substring(0, output_short.length - 1);
+    output_short += "}</div>"
+    output_long += "</div>"
+    // console.log("output_short: " + output_short);
+    // console.log("output_long: " + output_long);
+
+    $('#Function_Output').append(output_short);
+    $('#Function_Output').append(output_long);
+
+    var entry = {};
+    var serverset = {};
+    var text = "";
+    var objekt = {};
+
+    for (var e in server_output) {
+        serverset = server_output[e];
+        for (var entry in serverset) {
+            text = serverset[entry]['text'];
+            objekt = serverset[entry]['obj'];
+            proxyprinttodiv(text, objekt, 99);
+        }
+    }
+}
+
+exports.verifysummary_local = verifysummary_local = function verifysummary_local(resultsobject) {
+    var testfailflag = "false";
+
+    if (resultsobject !== undefined) {
+        for (var result in resultsobject) {
+            if (resultsobject[result] == "FAIL" || resultsobject[result] != "PASS" && resultsobject[result] != {}) {
+                testfailflag = 'true';
+            }
+        }
+    }
+
+    // The ultimate pass/fail
+    if (testfailflag == 'false') {
+        return {
+            "resultwid": 'PASS'
+        }
+    } else {
+        return {
+            "resultwid": 'FAIL'
+        }
+    }
+}
+
+// LM: Please leave this here
+$(document).keypress(function(e) {
+    if (e.which == 13) {
+        execute_stuff(true, false);
+    };
+});
+
+function showPassFail(result) {
+
+    document.getElementById("test_result_message").innerHTML = "";
+    if (result == 'PASS') {
+        document.getElementById("test_result_message").style.color = "green";
+        document.getElementById("test_result_message").style.fontSize = "250%";
+        document.getElementById("test_result_message").innerHTML = "PASS";
+    } else
+    if (result == 'FAIL') {
+        document.getElementById("test_result_message").style.color = "red";
+        document.getElementById("test_result_message").style.fontSize = "250%";
+        document.getElementById("test_result_message").innerHTML = "FAIL";
+    } else
+    if (result == 'UNKNOWN') {
+        document.getElementById("test_result_message").style.color = "blue";
+        document.getElementById("test_result_message").style.fontSize = "250%";
+        document.getElementById("test_result_message").innerHTML = "UNKNOWN";
+    }
+}
+
+function testgetwidmaster() {
+    document.getElementById("divprint").innerHTML = "";
+    try {
+        var widParameters = JSON.parse(document.getElementById("function_parameters").value);
+    } catch (e) {
+        console.error("JSON Parsing error:", e);
+        alert("JSON Parsing error:", e);
+        return;
+    }
+
+    widParameters["executethis"] = "getwidmaster";
+    var getwidresult = execute(widParameters, show_function_output);
+}
+
+function testaddwidmaster() {
+    document.getElementById("divprint").innerHTML = "";
+    try {
+        var widParameters = JSON.parse(document.getElementById("function_parameters").value);
+    } catch (e) {
+        console.error("JSON Parsing error:", e);
+        alert("JSON Parsing error:", e);
+        return;
+    }
+
+    widParameters["executethis"] = "addwidmaster";
+    var getwidresult = execute(widParameters, show_function_output);
+}
+
+function testexecutethis() {
+    try {
+        var widParameters = JSON.parse(document.getElementById("function_parameters").value);
+    } catch (e) {
+        console.error("JSON Parsing error:", e);
+        alert("JSON Parsing error:", e);
+        return;
+    }
+    execute(widParameters, show_function_output3);
+}
+
+function testconverttodot() {
+    document.getElementById("divprint").innerHTML = "";
+    var widParameters = JSON.parse(document.getElementById("function_parameters").value);
+    // widParameters['executethis'] = ConvertToDOTdri;
+    var getwidresult = ConvertToDOTdri(widParameters);
+    Display_Output(getwidresult);
+}
+
+function testconvertfromdot() {
+    document.getElementById("divprint").innerHTML = "";
+    var widParameters = JSON.parse(document.getElementById("function_parameters").value);
+    // widParameters['executethis'] = ConvertFromDOTdri;
+    var getwidresult = ConvertFromDOTdri(widParameters);
+    Display_Output(getwidresult);
+}
+
+function Display_Output(data) {
+    document.getElementById("Function_Output").innerHTML = "";
+    text = "<br><span><br><pre style='background: #D1D5D5; color: #339300;'>" + JSON.stringify(data) + "</pre><br></span>";
+    //$('#Function_Output').text(text);
+    document.getElementById("Function_Output").innerHTML = text;
+}
+
+function displayAllWids() {
+    document.getElementById("divwidsdisplay_from_local_storage").innerHTML = "";
+    var html = "";
+    for (var key in localStorage) {
+        //if(key.indexOf("widmaster_") == 0){
+        html += document.getElementById("divwidsdisplay_from_local_storage").innerHTML;
+        html += "<label style='color: red; font-size: 85%;'>" + key + "</label>   ";
+        // html += "<label style='color: purple; font-size: 85%;'>" + JSON.stringify(getFromLocalStorage(key)) + "</label><br>";
+        html += "<label style='color: purple; font-size: 85%;'>" + localStorage.getItem(key) + "</label><br>";
+        html += "<br>";
+    }
+    document.getElementById("divwidsdisplay_from_local_storage").innerHTML = html;
+}
+
+function displaylocalStore() {
+    document.getElementById("divwidsdisplay_from_memory").innerHTML = "";
+    var html = "";
+    var wid_storage = localStore.json;
+    for (var key in wid_storage) {
+        html += document.getElementById("divwidsdisplay_from_memory").innerHTML;
+        html += "<label style='color: red; font-size: 85%;'>" + key + "</label>   ";
+        var value = wid_storage[key];
+
+        html += "<label style='color: purple; font-size: 85%;'>" + JSON.stringify(value) + "</label><br>";
+
+        html += "<br>";
+    }
+    document.getElementById("divwidsdisplay_from_memory").innerHTML = html;
+}
+
+// Store radio button function
+function display_Store() {
+    document.getElementById("local_data").innerHTML = "";
+    var html = "";
+    var wid_storage = localStore.json;
+    console.log("\nLOCAL STORE\n\n" + JSON.stringify(localStore, null, 4));
+    for (var key in wid_storage) {
+        html += document.getElementById("local_data").innerHTML;
+        html += "<label style='color: red; font-size: 85%;'>" + key + "</label>   ";
+        var value = wid_storage[key];
+
+        html += "<label style='color: purple; font-size: 85%;'>" + JSON.stringify(value, null, 4) + "</label><br>";
+
+        html += "<br>";
+    }
+    document.getElementById("local_data").innerHTML = html;
+}
+
+function display_Local_Storage() {
+    document.getElementById("local_data").innerHTML = "";
+    var html = "";
+    for (var key in localStorage) {
+        //if(key.indexOf("widmaster_") == 0){
+        html += document.getElementById("local_data").innerHTML;
+        html += "<label style='color: red; font-size: 85%;'>" + key + "</label>   ";
+        html += "<label style='color: purple; font-size: 85%;'>" + localStorage.getItem(key) + "</label><br>";
+        html += "<br>";
+        // html += "<label style='color: purple; font-size: 85%;'>" + JSON.stringify(getFromLocalStorage(key)) + "</label><br>";
+    }
+    document.getElementById("local_data").innerHTML = html;
+}
+
+function display_local_wid() {
+
+    document.getElementById("local_data").innerHTML = "";
+        // for (var collection_key in localStorage) {
+        for (var collection_key in localStorage){
+            var html = "";
+            // debugger;
+            if (collection_key !== "") {
+                console.log("COLLECTION KEY " + collection_key);
+                var data_set = JSON.parse(localStorage.getItem(collection_key));
+                // if (typeof data_set === "object") {
+                    
+                // }
+                //     debugger;
+                // console.log("DATA SET " + JSON.stringify(data_set, null, 4));
+                // console.log("*** " + collection_key.substring(collection_key.length - 3));
+
+                if (collection_key.substring(collection_key.length - 3) !== "key" && collection_key !== "") {
+                    console.log("\n\nGOOD COLLECTION\n\n");
+                    console.log("\nDATA SET\n" + JSON.stringify(data_set, null, 4));
+                    html += document.getElementById("local_data").innerHTML;
+                    html += "<br>------------------------------------------<br>";
+                    html += collection_key + "<br>";
+                    html += "------------------------------------------<br><br>";
+
+                    for (var key in data_set) {
+
+                        // html += "<p><label style='color: red; font-size: 85%;'>" + data_set[key]["wid"] + "</label></p>";
+                        html += "<label style='color: purple; font-size: 85%;'><pre>" + JSON.stringify(data_set[key], null, 4) + "</pre></label><br>";
+                        html += "<br>";
+                    }
+                    document.getElementById("local_data").innerHTML = html;
+                }
+                // debugger;
+            }
+        }
+
+
+
+
+    // document.getElementById("local_data").innerHTML = "";
+    // var html = "";
+    // for (var key in localStorage) {
+    //     html += document.getElementById("local_data").innerHTML;
+    //     html += "<p><label style='color: red; font-size: 85%;'>" + key + "</label></p>";
+    //     html += "<label style='color: purple; font-size: 85%;'><pre>" + JSON.stringify(JSON.parse(localStorage.getItem(key)), '-', 4) + "</pre></label><br>";
+    //     html += "<br>";
+    // }
+    // document.getElementById("local_data").innerHTML = html;
+
+
+
+    // document.getElementById("local_data").innerHTML = "";
+    // var html = "";
+    // // JSON.stringify(outobject, "-", 4);
+    // var db = JSON.parse(localStorage['wikiwallettestingdricollectionkey']);
+    // // alert(JSON.stringify(db, '-', 4));
+    // // alert(JSON.stringify(db[0], '-', 4));
+    // // var db = JSON.stringify(JSON.parse(localStorage['DRIKEY']), "-", 4);
+    // for (var i in db) {
+    //     html += "<label style='color: red; font-size: 85%;'>" + i + "</label>   ";
+    //     html += "<label style='color: purple; font-size: 85%;'>" + JSON.stringify(db[i], '-', 4) + "</label><br><br>";
+    //     document.getElementById("local_data").innerHTML = html;
+    // }
+}
+
+$("input[name='output_type']").change(function() {
+    if (document.getElementById('radio_short').checked) {
+        $('#short_output').show('slow');
+        $('#long_output').hide('slow');
+    } else {
+        $('#short_output').hide('slow');
+        $('#long_output').show('slow');
+    }
+});
+
+$("input[name='data_type']").change(function() {
+    $("#local_data").hide('fast');
+    // if (document.getElementById('data_local_storage').checked) {
+    //     display_Local_Storage();
+    // }
+    if (document.getElementById('data_store').checked) {
+        display_Store();
+    }
+    if (document.getElementById('data_wid').checked) {
+        display_local_wid();
+    }
+    $("#local_data").show('fast');
+});
+
+$('#reload_page').click(function() {
+    location.reload();
+});
+
+
+function isNumeric(elem, helperMsg) {
+    var numericExpression = /^[0-9]+$/;
+    if (elem.value.match(numericExpression)) {
+        return true;
+    } else {
+        alert(helperMsg);
+        elem.focus();
+        return false;
+    }
+}
+
+function checkBeforeSubmit() {
+    if ((isNumeric(document.getElementById('numbers'), 'Please enter a number'))) {
+        document.getElementById('theForm').submit();
+        document.getElementById('success').innerHTML = 'Submitted';
+    }
+}
+</script>
+
+<div id='google_data' style='display:none'>
+    <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
+    <form method="post" action="https://script.google.com/macros/s/AKfycbyy6Nu3M6EQZ7wyx4vIGOoe8xAZUkzKC1f2wlRcdn6VcatTc9w/exec" name="theForm" id="theForm" target="hidden_iframe" id="GoogleForm">
+        <!-- <form method="post" action="https://script.google.com/macros/s/AKfycbwVOpk9j4HDMGsgHOw7BzGvpTBXYQLkZgVBpWxiVQo7oBvQmHEh/exec" name="theForm" id="theForm" target="hidden_iframe" id="GoogleForm"> -->
+        Name:
+        <input type="text" name="name" id="name" />
+        <br />Comment:
+        <textarea name="comment" id="comment"></textarea>
+        <br />Basic spam prevention (enter any 4 digit number):
+        <input name="numbers" id="numbers" type="text">
+        <input type="button" value="Submit" class="submit" onclick="checkBeforeSubmit();" />
+        <span id="success"></span>
+    </form>
+</div>
+
+
+</body>
+
+</html>
