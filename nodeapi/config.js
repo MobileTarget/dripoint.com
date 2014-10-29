@@ -57,7 +57,13 @@ exports.settings = settings = {
 };
 
 exports.get_app_name = get_app_name = function get_app_name(p, cb) {
-	console.log('Check app name - test7');
-	cb(null, {'app_name':'test7'} );
+        var appurl = get_file_contents('/dri/app_repo_url.txt');
+	cb(null, {'app_name': appurl } );
 }
+
+function get_file_contents(file_path) {
+	var output = fs.readFileSync(file_path, 'utf8');
+	return output;
+}
+
 
