@@ -17,6 +17,11 @@ exports.serverconfig = serverconfig = {
             // "DB_HOST_NAME": 'localhost:27017'
 exports.settings = settings = {
     DB_SET: {
+    	"testcluster": {
+    	    "DB_USER_ID": "trugate",
+            "DB_USER_PWD": "tempalte-77",
+            "DB_HOST_NAME": 'ds051510-a0.mongolab.com:51510'
+    	},
         "dricluster": {
             "DB_USER_ID": "trugate",
             "DB_USER_PWD": "tempalte-77",
