@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="6fd2f42f-9dd6-41ea-beb8-9159ca39b939" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dripoint/index.html" afterPath="$PROJECT_DIR$/dripoint/index.html" />
-    </list>
+    <list default="true" id="6fd2f42f-9dd6-41ea-beb8-9159ca39b939" name="Default" comment="" />
     <ignored path="drilabs.com.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -89,7 +87,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -152,6 +149,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
