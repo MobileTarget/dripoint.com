@@ -1,21 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta carset="utf8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/themes/smoothness/jquery-ui.css" />
-    <title></title>
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bower_components/jquery-ui/themes/smoothness/jquery-ui.min.css">
 
-    <style>
-        body {
-            margin-top: 20px;
-        }
-    </style>
-
-    <script src="http://maps.googleapis.com/maps/api/js?libraries=places,weather&sensor=FALSE"></script>
-    <script src="https://mandrillapp.com/api/docs/js/mandrill.js"></script>
-    <script src="js/platform/platform.js"></script>
-    <script src="js/async.js"></script>
+    <script src="bower_components/mandrill-api/mandrill.min.js"></script>
+    <script src="bower_components/async/lib/async.js"></script>
     <script src="config.js"></script>
     <script src="js/et-interface.js"></script>
     <script src="js/et-utils.js"></script>
@@ -25,20 +17,19 @@
     <script src="js/et-get.js"></script>
     <script src="js/et-add.js"></script>
     <script src="js/et-test.js"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.66.0-2013.10.09/jquery.blockUI.min.js"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js"></script>
-    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-    <script src="https://code.angularjs.org/1.2.9/angular.min.js"></script>
-    <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.10.0.js"></script>
-    <script src="js/bootstrap/autofields/autofields.min.js"></script>
-    <script src="js/bootstrap/autofields/autoFields-bootstrap.min.js"></script>
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/jquery-ui/jquery-ui.min.js"></script>
+    <script src="bower_components/blockui/jquery.blockUI.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="bower_components/angularjs/angular.min.js"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+    <script src="bower_components/angular-autoFields-bootstrap/autofields.min.js"></script>
+    <script src="bower_components/angular-autoFields-bootstrap/autofields-bootstrap.min.js"></script>
     <script src="js/ngWidApp.js"></script>
-
-    <link rel="import" href="js/polymer/polymer.html">
+    <script src="bower_components/platform/platform.js"></script>
+    <link rel="import" href="bower_components/polymer/polymer.html">
 
     <script>
-        // line below added by Roger -- taken away from ngwidapp line 6
         eventdeviceready({}, function (err, results) { });
 
         angular.element(document).ready(function() {
@@ -46,7 +37,7 @@
         });
     </script>
 </head>
-<body ng-controller='widCtrl'>
+<body ng-controller="widCtrl">
 <div id="default_view_loc"></div>
 </body>
 </html>
