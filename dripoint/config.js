@@ -27,6 +27,8 @@ function loadconfig() {
     configuration.datastore = 'localstorage';
     configuration.keycollection = configuration.collection+'key';
     configuration.databasetable = 'dricluster';
+    
+    configuration.sitename = 'dripoint';
 
     // configuration.e is the wid name for "environment"
     configuration.e = configuration.databasetable+configuration.collection+"environment";
