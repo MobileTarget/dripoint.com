@@ -57,7 +57,8 @@ exports.settings = settings = {
         'safe': true,
         'server': true,
         'auto_reconnect': true,
-        'pool': 5
+        'pool': 5,
+        'slaveOk': true
     }
 };
 
