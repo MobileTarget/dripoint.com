@@ -21,7 +21,7 @@ function loadconfig() {
     configuration.environment = 'local';
     configuration.syncrule = 'sync_local_server';
     configuration.machinename = 'browser'; //'phonegap';
-    configuration.startwid = 'startwid';
+    configuration.startwid = 'mobt';
     configuration.collection = 'dricollection';
     configuration.db = 'data';
     configuration.datastore = 'localstorage';
