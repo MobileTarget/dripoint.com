@@ -22,17 +22,17 @@ exports.settings = settings = {
             "DB_USER_PWD": "tempalte-77",
             "DB_HOST_NAME": 'ds051510-a1.mongolab.com:51510'
     	},
-        "TESTTABLE": {
-            "DB_USER_ID": "trugate",
-            "DB_USER_PWD": "tempalte-77",
-            "DB_HOST_NAME": 'ds051510-a1.mongolab.com:51510'
-        },
         "dricluster": {
             "DB_USER_ID": "trugate",
             "DB_USER_PWD": "tempalte-77",
             "DB_HOST_NAME": 'ds063259-a0.mongolab.com:63259'
         },
         "wikiwallettesting": {
+            "DB_USER_ID": "trugate",
+            "DB_USER_PWD": "tempalte-77",
+            "DB_HOST_NAME": 'ds045627.mongolab.com:45627'
+        },
+        "TESTTABLE": {
             "DB_USER_ID": "trugate",
             "DB_USER_PWD": "tempalte-77",
             "DB_HOST_NAME": 'ds045627.mongolab.com:45627'
